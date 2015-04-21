@@ -67,7 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ABTabStrip\ABTabStrip.csproj">
-      <Project>{3ed954ff-737c-43f6-8910-fcdd4c64477b}</Project>
+      <Project>{271bdc2c-58e7-4553-bcd7-77b63f6d297b}</Project>
       <Name>ABTabStrip</Name>
     </ProjectReference>
   </ItemGroup>

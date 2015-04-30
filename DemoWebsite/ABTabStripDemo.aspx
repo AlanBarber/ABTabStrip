@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="ABTabStripDemo.aspx.cs" Inherits="DemoWebsite.ABTabStripDemo" %>
-<%@ Register TagPrefix="CC" Namespace="ABTabStrip" Assembly="ABTabStrip" %>
+<%@ Register TagPrefix="ABTabStrip" Namespace="ABTabStrip" Assembly="ABTabStrip" %>
 
 <!DOCTYPE html>
 
@@ -11,11 +11,11 @@
     <form id="form1" runat="server">
     <div>
     
-        <CC:ABTabStrip runat="server" id="TabStrip1" Text="My Tab Strip">
+        <ABTabStrip:TabStrip runat="server" id="TabStrip1" Text="My Tab Strip" OnClick="TabStrip1_OnClick">
             <div>
                 <asp:Label runat="server" ID="lblSelectedTabInfo"/>
             </div>
-        </CC:ABTabStrip>
+        </ABTabStrip:TabStrip>
 
     </div>
     </form>

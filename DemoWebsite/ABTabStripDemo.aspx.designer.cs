@@ -28,7 +28,7 @@ namespace DemoWebsite {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::ABTabStrip.ABTabStrip TabStrip1;
+        protected global::ABTabStrip.TabStrip TabStrip1;
         
         /// <summary>
         /// lblSelectedTabInfo control.

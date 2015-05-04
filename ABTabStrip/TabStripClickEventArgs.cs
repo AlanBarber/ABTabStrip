@@ -2,6 +2,7 @@ using System;
 
 namespace ABTabStrip
 {
+    [Serializable()]
     public class TabStripClickEventArgs : EventArgs
     {
         private readonly TabStripItem _tabStripItem;
@@ -16,7 +17,7 @@ namespace ABTabStrip
             _tabStripItem = tabStripItem;
         }
 
-        public TabStripItem TabStripItem
+        public TabStripItem SelectedItem
         {
             get { return _tabStripItem; }
         }

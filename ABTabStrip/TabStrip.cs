@@ -10,8 +10,6 @@ namespace ABTabStrip
 {
     [DefaultProperty("Text")]
     [ToolboxData("<{0}:TabStrip runat=\"server\" id=\"TabStrip1\" Text=\"TabStrip1\"></{0}:TabStrip>")]
-    [AspNetHostingPermission(SecurityAction.Demand, Level = AspNetHostingPermissionLevel.Minimal)]
-    [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
     [PersistChildren(true)]
     [ParseChildren(false)]
     public class TabStrip : WebControl, IPostBackEventHandler
@@ -21,7 +19,7 @@ namespace ABTabStrip
         /// <summary>
         /// Initializes a new instance of the <see cref="TabStrip"/> class.
         /// </summary>
-        public TabStrip() : base(HtmlTextWriterTag.Div) {}
+        public TabStrip() {}
 
         /// <summary>
         /// Raises the <see cref="E:System.Web.UI.Control.Init" /> event.
@@ -79,9 +77,7 @@ namespace ABTabStrip
         protected override object SaveControlState()
         {
             var baseControlState = base.SaveControlState();
-            var tabStripControlState = new TabStripControlState();
-            // set values here
-            return new Pair(baseControlState, tabStripControlState);
+            return new Pair(baseControlState, _tabStripControlState);
         }
 
         /// <summary>
@@ -96,8 +92,7 @@ namespace ABTabStrip
                 if (p != null)
                 {
                     base.LoadControlState(p.First);
-                    var tabStripControlState = p.Second as TabStripControlState;
-                    // do stuff here
+                    _tabStripControlState = p.Second as TabStripControlState;
                 }
                 else
                 {
@@ -111,8 +106,9 @@ namespace ABTabStrip
         /// Renders the contents.
         /// </summary>
         /// <param name="output">The output.</param>
-        protected override void RenderContents(HtmlTextWriter output)
+        protected override void Render(HtmlTextWriter output)
         {
+            GenerateInlineStyle(output);
             // Wrapper
             output.AddAttribute("id", ClientID);
             output.AddAttribute("class", "ABTabStripWrapper");
@@ -124,16 +120,17 @@ namespace ABTabStrip
             output.RenderEndTag(); // Div (Header)
             // Content (Calls base to render nested controls inside of tab strip)
             output.AddAttribute("class", "ABTabStripContent");
-            base.RenderContents(output);
+            output.RenderBeginTag(HtmlTextWriterTag.Div);
+            RenderContents(output);
             output.RenderEndTag(); // Div (Content)
             output.RenderEndTag(); // Div (Wrapper)
         }
-
-
-
+        
         #endregion
 
         #region Properties
+
+        private TabStripControlState _tabStripControlState = new TabStripControlState();
 
         [Bindable(true)]
         [Category("Appearance")]
@@ -141,21 +138,19 @@ namespace ABTabStrip
         [Localizable(true)]
         public string Text
         {
-            get
-            {
-                var s = (string)ViewState[string.Format("{0}_Text", ID)];
-                return (s ?? "[" + ID + "]");
-            }
- 
-            set
-            {
-                ViewState[string.Format("{0}_Text", ID)] = value;
-            }
+            get { return _tabStripControlState.Text; }
+            set { _tabStripControlState.Text = value; }
         }
 
-        public List<TabStripItem> Items;
+        public List<TabStripItem> Items
+        {
+            get { return _tabStripControlState.Items; }
+        }
 
-        public TabStripItem SelectedItem;
+        public TabStripItem SelectedItem
+        {
+            get { return _tabStripControlState.SelectedItem; }
+        }
 
         public object DataSource;
 
@@ -163,23 +158,42 @@ namespace ABTabStrip
 
         #region Internal Functions
 
+        private void GenerateInlineStyle(HtmlTextWriter output)
+        {
+            output.RenderBeginTag(HtmlTextWriterTag.Style);
+            output.WriteLine(".BWCTabStripWrapper            {}");
+            output.WriteLine(".BWCTabStripHeader             {}");
+            output.WriteLine(".BWCTabStripHeader ul          { list-style: none; padding: 0; margin: 0; }");
+            output.WriteLine(".BWCTabStripHeader li          { float: left; border: 1px solid #bbb; border-bottom-width: 0; margin: 0; }");
+            output.WriteLine(".BWCTabStripHeader a           { text-decoration: none; display: block; background: #d3d3d3; padding: 0.24em 1em; color: #000; width: auto; text-align: center; }");
+            output.WriteLine(".BWCTabStripHeader a:hover     { background: #ddf; }");
+            output.WriteLine(".BWCTabStripHeader .selected   { border-color: #000; }");
+            output.WriteLine(".BWCTabStripHeader .selected a { position: relative; top: 1px; background: #fff; color: #000; font-weight: bold; }");
+            output.WriteLine(".BWCTabStripContent            { clear: both; padding: 0; border: 1px solid black; }");
+            output.RenderEndTag();
+        }
+
         private void GenerateTabStripHTML(HtmlTextWriter output)
         {
             output.RenderBeginTag(HtmlTextWriterTag.Ul);
 
-            foreach (var i in Items)
+            if (Items != null)
             {
-                if(true)
-                    output.AddAttribute("class", "selected");
+                foreach (var i in Items)
+                {
+                    if (true)
+                        output.AddAttribute("class", "selected");
 
-                output.RenderBeginTag(HtmlTextWriterTag.Li);
+                    output.RenderBeginTag(HtmlTextWriterTag.Li);
 
-                output.AddAttribute(HtmlTextWriterAttribute.Href, string.Format("javascript:{0}", Page.ClientScript.GetPostBackEventReference(this, i.Text)));
-                output.RenderBeginTag(HtmlTextWriterTag.A);
-                output.Write(i.Text);
-                output.RenderEndTag(); // A
+                    output.AddAttribute(HtmlTextWriterAttribute.Href,
+                        string.Format("javascript:{0}", Page.ClientScript.GetPostBackEventReference(this, i.Text)));
+                    output.RenderBeginTag(HtmlTextWriterTag.A);
+                    output.Write(i.Text);
+                    output.RenderEndTag(); // A
 
-                output.RenderEndTag(); // Li
+                    output.RenderEndTag(); // Li
+                }
             }
 
             output.RenderEndTag(); // Ul

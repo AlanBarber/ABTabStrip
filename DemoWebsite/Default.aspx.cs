@@ -12,10 +12,17 @@ namespace DemoWebsite
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            //TabStrip1.DataSource = null;
+            var ds = new List<TabStripItem>()
+            {
+                new TabStripItem() {Text = "Tab 1", Value = string.Empty},
+                new TabStripItem() {Text = "Tab 2", Value = string.Empty}
+            };
+
+            TabStrip1.DataSource = ds.ToArray();
+
             TabStrip1.DataBind();
 
-            //lblSelectedTab.Text = string.Format("Selected Tab [{0} - {1}]", TabStrip1.SelectedItem.Text, TabStrip1.SelectedItem.Value);
+            lblSelectedTab.Text = string.Format("Selected Tab [{0} - {1}]", TabStrip1.SelectedItem.Text, TabStrip1.SelectedItem.Value);
         }
 
         protected void TabStrip1_OnClick(object sender, TabStripClickEventArgs e)

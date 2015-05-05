@@ -34,14 +34,19 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ResourceFinder.cs" />
     <Compile Include="TabStrip.cs" />
     <Compile Include="TabStripClickEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TabStripControlState.cs" />
     <Compile Include="TabStripItem.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="toolbox.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

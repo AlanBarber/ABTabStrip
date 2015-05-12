@@ -9,5 +9,6 @@ namespace ABTabStrip
         public string Text;
         public List<TabStripItem> Items;
         public TabStripItem SelectedItem;
+        public bool UseDefaultStyle;
     }
 }

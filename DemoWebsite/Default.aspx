@@ -11,7 +11,7 @@
     <form id="form1" runat="server">
     <div>
         
-    <ABTabStrip:TabStrip runat="server" id="TabStrip1" Text="TabStrip1" OnClick="TabStrip1_OnClick">
+    <ABTabStrip:TabStrip runat="server" id="TabStrip1" Text="TabStrip1" OnClick="TabStrip1_OnClick" >
         <div>
             <asp:Label runat="server" ID="lblSelectedTab"></asp:Label>
         </div>

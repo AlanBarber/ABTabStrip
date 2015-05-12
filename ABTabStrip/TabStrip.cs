@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Drawing;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
-using System.Security.Permissions;
-using System.Security.Policy;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -30,6 +27,15 @@ namespace ABTabStrip
         {
             get { return _tabStripControlState.Text; }
             set { _tabStripControlState.Text = value; }
+        }
+
+        [Bindable(true)]
+        [Category("Appearance")]
+        [DefaultValue(true)]
+        public bool UseDefaultStyle
+        {
+            get { return _tabStripControlState.UseDefaultStyle; }
+            set { _tabStripControlState.UseDefaultStyle = value; }
         }
 
         public List<TabStripItem> Items
@@ -65,6 +71,8 @@ namespace ABTabStrip
             // Load with default from text if we have no items or data source loaded (if there is no text set text to control ID)
             if (string.IsNullOrEmpty(Text))
                 _tabStripControlState.Text = ID;
+
+            _tabStripControlState.UseDefaultStyle = true;
 
             if (_tabStripControlState.Items == null)
                 _tabStripControlState.Items = new List<TabStripItem>();
@@ -139,7 +147,8 @@ namespace ABTabStrip
         /// <exception cref="System.NotImplementedException"></exception>
         public void RaisePostBackEvent(string eventArgument)
         {
-            OnClick(new TabStripClickEventArgs(_tabStripControlState.Items.FirstOrDefault(i => i.Text == eventArgument)));
+            _tabStripControlState.SelectedItem = _tabStripControlState.Items.FirstOrDefault(i => i.Text == eventArgument);
+            OnClick(new TabStripClickEventArgs(_tabStripControlState.SelectedItem));
         }
 
         /// <summary>
@@ -182,7 +191,8 @@ namespace ABTabStrip
         /// <param name="output">The output.</param>
         protected override void Render(HtmlTextWriter output)
         {
-            GenerateInlineStyle(output);
+            if(_tabStripControlState.UseDefaultStyle)
+                GenerateInlineStyle(output);
             // Wrapper
             output.AddAttribute("id", ClientID);
             output.AddAttribute("class", "ABTabStripWrapper");
